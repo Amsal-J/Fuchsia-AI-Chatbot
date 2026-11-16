@@ -1,15 +1,15 @@
-# Temporal Folder Sync
+# Fuchsia AI Chatbot
 
-Temporal (Java SDK) app that polls folder1 on an interval and copies
-new files (unique by filename) into folder2. Containerized using Docker.
+Ingestion service for the Fuchsia AI chatbot (currently: Temporal workflow that polls folder1 and copies new files to folder2).
+Containerized using Docker and through VSCode's Dev Container Extension.
 
 ## Quick start **WITH** Docker Locally
 
 Requires only [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
 ```bash
-git clone https://github.com/Amsal-J/temporal-folder-sync.git
-cd temporal-folder-sync
+git clone https://github.com/Amsal-J/fuchsia-ai-chatbot.git
+cd fuchsia-ai-chatbot
 docker compose up --build
 ```
 
@@ -34,7 +34,7 @@ Running the project locally:
 
 To stop the execution of program being run locally:
 1. `Ctrl+C` the worker tab.
-2. Run the command `temporal workflow terminate --workflow-id folder-sync --reason "stopping sync"` to stop the workflow.
+2. Run the command `temporal workflow terminate --workflow-id fuchsia-ai-chatbot --reason "stopping sync"` to stop the workflow.
 3. Then you may close down the Temporal Server by pressing `Ctrl+C` on that terminal window.
 
 ## Develop in a container (VS Code)

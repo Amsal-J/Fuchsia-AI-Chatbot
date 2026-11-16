@@ -24,9 +24,9 @@ public class FolderSyncStarter {
                 Shared.SOURCE_DIR, Shared.DEST_DIR,
                 Shared.POLLING_INTERVAL, Shared.LOOPS_BEFORE_RESET);
 
-            System.out.printf("Started folder sync. WorkflowId=%s RunId=%s%n", execution.getWorkflowId(), execution.getRunId());
+            System.out.printf("Started ingestion sync. WorkflowId=%s RunId=%s%n", execution.getWorkflowId(), execution.getRunId());
         } catch (WorkflowExecutionAlreadyStarted e) {
-            System.out.println("Folder sync is already running (WorkflowId=" + Shared.WORKFLOW_ID + "). Nothing to do.");
+            System.out.println("Ingestion sync is already running (WorkflowId=" + Shared.WORKFLOW_ID + "). Nothing to do.");
         }
 
         System.exit(0);

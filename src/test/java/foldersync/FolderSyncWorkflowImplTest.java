@@ -91,7 +91,7 @@ class FolderSyncWorkflowImplTest {
                 FolderSyncWorkflow.class,
                 WorkflowOptions.newBuilder()
                         .setTaskQueue(TASK_QUEUE)
-                        .setWorkflowId("test-folder-sync")
+                        .setWorkflowId("test-fuchsia-ingestion")
                         .build());
 
         WorkflowClient.start(workflow::sync, "folder1", "folder2", pollSeconds, loopsBeforeReset);

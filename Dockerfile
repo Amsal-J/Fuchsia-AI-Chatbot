@@ -1,5 +1,5 @@
 # ------------ Stage 1: Build ------------
-FROM maven:3-eclipse-temurin-21 AS build
+FROM maven:3.10-eclipse-temurin-21-noble AS build
 WORKDIR /build
 
 # Download dependencies first (chached unless pom.xml changes)
@@ -12,7 +12,7 @@ RUN mvn -B  package -DskipTests \
 && mvn -B dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=target/lib
 
 # ------------ Stage 2: Run ------------
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-noble
 WORKDIR /app
 
 COPY --from=build /build/target/*.jar ./app.jar
