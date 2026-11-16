@@ -1,0 +1,23 @@
+{
+    "name": "temporal-folder-sync",
+
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "dev",
+    "workspaceFolder": "/workspaces/temporal-folder-sync",
+    "shutdownAction": "stopCompose",
+
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "none",
+            "installMaven": true
+        }
+    },
+
+    "customizations": {
+        "vscode": {
+            "extensions": ["vscjava.vscode-java-pack"]
+        }
+    },
+
+    "postCreateCommand": "bash .devcontainer/post-create.sh"
+}
