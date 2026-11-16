@@ -1,4 +1,4 @@
-package foldersync;
+package fuchsia;
 
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
@@ -8,12 +8,12 @@ import java.time.Duration;
 import java.util.List;
 import org.slf4j.Logger;
 
-public class FolderSyncWorkflowImpl implements FolderSyncWorkflow {
+public class IngestionWorkflowImpl implements IngestionWorkflow {
 
-    private static final Logger log = Workflow.getLogger(FolderSyncWorkflowImpl.class);
+    private static final Logger log = Workflow.getLogger(IngestionWorkflowImpl.class);
 
-    private final FolderSyncActivities activities = Workflow.newActivityStub(
-        FolderSyncActivities.class,
+    private final IngestionActivities activities = Workflow.newActivityStub(
+        IngestionActivities.class,
         ActivityOptions.newBuilder()
             .setStartToCloseTimeout(Duration.ofMinutes(5))
             .setRetryOptions(RetryOptions.newBuilder()

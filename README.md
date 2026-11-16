@@ -29,8 +29,8 @@ Download links for the required programs to run locally:
 Running the project locally:
 
 1. `temporal server start-dev --db-filename ~/temporal.db` to start the server, will continue indefinitely
-2. `mvn compile exec:java -Dexec.mainClass="foldersync.FolderSyncWorker"` to start the worker, will continue indefinitely
-3. `mvn compile exec:java -Dexec.mainClass="foldersync.FolderSyncStarter"` to start the workflow, will stop once workflow has started
+2. `mvn compile exec:java -Dexec.mainClass="fuchsia.IngestionWorker"` to start the worker, will continue indefinitely
+3. `mvn compile exec:java -Dexec.mainClass="fuchsia.IngestionStarter"` to start the workflow, will stop once workflow has started
 
 To stop the execution of program being run locally:
 1. `Ctrl+C` the worker tab.
@@ -49,8 +49,8 @@ The container includes JDK 21, Maven, the Temporal CLI, and the Java extensions,
 
 ```bash
 mvn test
-mvn compile exec:java -Dexec.mainClass="foldersync.FolderSyncWorker"
-mvn compile exec:java -Dexec.mainClass="foldersync.FolderSyncStarter"
+mvn compile exec:java -Dexec.mainClass="fuchsia.IngestionWorker"
+mvn compile exec:java -Dexec.mainClass="fuchsia.IngestionStarter"
 ```
 
 - Temporal UI: http://localhost:8233

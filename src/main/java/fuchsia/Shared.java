@@ -1,4 +1,4 @@
-package foldersync;
+package fuchsia;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 

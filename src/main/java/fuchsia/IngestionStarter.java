@@ -1,4 +1,4 @@
-package foldersync;
+package fuchsia;
 
 import io.temporal.api.common.v1.WorkflowExecution;
 import io.temporal.client.WorkflowClient;
@@ -6,7 +6,7 @@ import io.temporal.client.WorkflowExecutionAlreadyStarted;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 
-public class FolderSyncStarter {
+public class IngestionStarter {
     public static void main(String[] args) {
         WorkflowServiceStubs service = Shared.connect();
         WorkflowClient client = WorkflowClient.newInstance(service);
@@ -16,7 +16,7 @@ public class FolderSyncStarter {
             .setTaskQueue(Shared.TASK_QUEUE)
             .build();
 
-        FolderSyncWorkflow workflow = client.newWorkflowStub(FolderSyncWorkflow.class, options);
+        IngestionWorkflow workflow = client.newWorkflowStub(IngestionWorkflow.class, options);
 
         try {
             WorkflowExecution execution = WorkflowClient.start(

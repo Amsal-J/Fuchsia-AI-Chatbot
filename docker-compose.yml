@@ -27,7 +27,7 @@ services:
   starter:
     build: .
     image: fuchsia-ai-chatbot:latest
-    command: ["foldersync.FolderSyncStarter"]
+    command: ["fuchsia.IngestionStarter"]
     environment:
       TEMPORAL_ADDRESS: temporal:7233
     depends_on:

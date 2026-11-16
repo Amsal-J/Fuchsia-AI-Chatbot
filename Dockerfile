@@ -19,4 +19,4 @@ COPY --from=build /build/target/*.jar ./app.jar
 COPY --from=build /build/target/lib ./lib
 
 ENTRYPOINT ["java", "-cp", "app.jar:lib/*"]
-CMD ["foldersync.FolderSyncWorker"]
+CMD ["fuchsia.IngestionWorker"]
