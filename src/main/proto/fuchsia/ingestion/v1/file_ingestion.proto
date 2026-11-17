@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package fuchsia.ingestion.v1;
+
+option deprecated = true;
+
+option java_multiple_files = true;
+option java_outer_classname = "FileIngestionProto";
+option java_package = "fuchsia.grpc";
+
+// The service: what the server offers and the client can call.
+service FileIngestionService {
+  option deprecated = true;
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {
+    option deprecated = true;
+  }
+}
+
+// What the client sends.
+message UploadFileRequest {
+  option deprecated = true;
+  string filename = 1;
+  bytes content = 2;
+}
+
+// What the server sends back.
+message UploadFileResponse {
+  option deprecated = true;
+  bool accepted = 1;
+  string message = 2;
+}
