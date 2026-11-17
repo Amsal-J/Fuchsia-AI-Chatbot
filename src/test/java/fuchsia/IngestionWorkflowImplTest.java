@@ -1,13 +1,8 @@
-package foldersync;
+package fuchsia;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.temporal.activity.Activity;
-import io.temporal.activity.ActivityInfo;
-import io.temporal.client.WorkflowClient;
-import io.temporal.client.WorkflowOptions;
-import io.temporal.testing.TestWorkflowEnvironment;
-import io.temporal.worker.Worker;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
@@ -16,11 +11,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BooleanSupplier;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class FolderSyncWorkflowImplTest {
+import io.temporal.activity.Activity;
+import io.temporal.activity.ActivityInfo;
+import io.temporal.client.WorkflowClient;
+import io.temporal.client.WorkflowOptions;
+import io.temporal.testing.TestWorkflowEnvironment;
+import io.temporal.worker.Worker;
+
+class IngestionWorkflowImplTest {
 
     private static final String TASK_QUEUE = "test-queue";
 
@@ -30,7 +33,7 @@ class FolderSyncWorkflowImplTest {
 
     // ---------- fake activities (behave like real folders) ----------
 
-    public static class FakeActivities implements FolderSyncActivities {
+    public static class FakeActivities implements IngestionActivities {
         // Controls (set by each test)
         final Set<String> folder1 = ConcurrentHashMap.newKeySet();
         final AtomicInteger scanFailuresRemaining = new AtomicInteger(0);
@@ -70,7 +73,7 @@ class FolderSyncWorkflowImplTest {
     void setUp() {
         testEnv = TestWorkflowEnvironment.newInstance();
         Worker worker = testEnv.newWorker(TASK_QUEUE);
-        worker.registerWorkflowImplementationTypes(FolderSyncWorkflowImpl.class);
+        worker.registerWorkflowImplementationTypes(IngestionWorkflowImpl.class);
 
         fake = new FakeActivities();
         worker.registerActivitiesImplementations(fake);
@@ -87,11 +90,11 @@ class FolderSyncWorkflowImplTest {
     // ---------- helpers ----------
 
     private void startWorkflow(int pollSeconds, int loopsBeforeReset) {
-        FolderSyncWorkflow workflow = client.newWorkflowStub(
-                FolderSyncWorkflow.class,
+        IngestionWorkflow workflow = client.newWorkflowStub(
+                IngestionWorkflow.class,
                 WorkflowOptions.newBuilder()
                         .setTaskQueue(TASK_QUEUE)
-                        .setWorkflowId("test-folder-sync")
+                        .setWorkflowId("test-fuchsia-ingestion")
                         .build());
 
         WorkflowClient.start(workflow::sync, "folder1", "folder2", pollSeconds, loopsBeforeReset);

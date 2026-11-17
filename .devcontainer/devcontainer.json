@@ -1,9 +1,9 @@
 {
-    "name": "temporal-folder-sync",
+    "name": "fuchsia-ai-chatbot",
 
     "dockerComposeFile": "docker-compose.yml",
     "service": "dev",
-    "workspaceFolder": "/workspaces/temporal-folder-sync",
+    "workspaceFolder": "/workspaces/fuchsia-ai-chatbot",
     "shutdownAction": "stopCompose",
 
     "features": {

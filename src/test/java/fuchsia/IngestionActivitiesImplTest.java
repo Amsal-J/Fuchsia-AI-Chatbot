@@ -1,30 +1,34 @@
-package foldersync;
+package fuchsia;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-class FolderSyncActivitiesImplTest {
+class IngestionActivitiesImplTest {
 
     @TempDir 
     Path tempDir;
 
     private Path folder1;
     private Path folder2;
-    private FolderSyncActivitiesImpl activities;
+    private IngestionActivitiesImpl activities;
 
     @BeforeEach 
     void setUp() throws IOException {
         folder1 = Files.createDirectory(tempDir.resolve("folder1"));
         folder2 = Files.createDirectory(tempDir.resolve("folder2"));
-        activities = new FolderSyncActivitiesImpl();
+        activities = new IngestionActivitiesImpl();
     }
 
     // -------------- helpers --------------

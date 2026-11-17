@@ -1,6 +1,6 @@
 services:
   temporal:
-    image: temporalio/temporal:latest
+    image: temporalio/temporal:1.10.1
     command: ["server", "start-dev", "--ip", "0.0.0.0"]
     ports:
       - "7233:7233" # Temporal Server
@@ -12,9 +12,9 @@ services:
       retries: 20
 
   dev:
-    image: mcr.microsoft.com/devcontainers/java:21
+    image: mcr.microsoft.com/devcontainers/java:21-bookworm
     volumes:
-      - ..:/workspaces/temporal-folder-sync:cached
+      - ..:/workspaces/fuchsia-ai-chatbot:cached
     environment:
       TEMPORAL_ADDRESS: temporal:7233
     command: sleep infinity
