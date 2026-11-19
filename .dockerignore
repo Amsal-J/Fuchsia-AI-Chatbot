@@ -1,6 +1,7 @@
 target/
 folder1/
 folder2/
+outbox/
 .git/
 .github/
 *.db
