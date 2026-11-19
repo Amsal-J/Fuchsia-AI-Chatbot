@@ -37,6 +37,14 @@ public class FileIngestionServiceImpl extends FileIngestionServiceGrpc.FileInges
             return;
         }
 
+        if (request.getContent().isEmpty()) {
+            log.warn("Rejected upload '{}': file is empty", filename);
+            responseObserver.onError(Status.INVALID_ARGUMENT
+                    .withDescription("File is empty")
+                    .asRuntimeException());
+            return;
+        }
+
         Path target = targetDir.resolve(filename);
         Path temp = targetDir.resolve("." + filename + "." + UUID.randomUUID() + ".part");
 

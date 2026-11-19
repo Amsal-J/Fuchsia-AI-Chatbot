@@ -33,3 +33,25 @@ services:
     depends_on:
       temporal:
         condition: service_healthy
+
+  grpc-server:
+    build: .
+    image: fuchsia-ai-chatbot:latest
+    command: ["fuchsia.FileIngestionServer"]
+    ports:
+      - "50051:50051"
+    volumes:
+      - ./folder1:/app/folder1
+    restart: unless-stopped
+
+  client:
+    build: .
+    image: fuchsia-ai-chatbot:latest
+    profiles: ["tools"]
+    entrypoint: ["java", "-cp", "app.jar:lib/*", "fuchsia.FileIngestionClient"]
+    environment:
+      GRPC_HOST: grpc-server
+    volumes:
+      - ./outbox:/outbox
+    depends_on:
+      - grpc-server

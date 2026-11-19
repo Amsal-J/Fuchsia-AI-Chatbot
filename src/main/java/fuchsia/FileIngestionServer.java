@@ -14,15 +14,7 @@ public class FileIngestionServer {
     private static final Logger log = LoggerFactory.getLogger(FileIngestionServer.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Path targetDir = Paths.get(Shared.SOURCE_DIR);
-        Files.createDirectories(targetDir);
-
-        Server server = ServerBuilder.forPort(Shared.GRPC_PORT)
-            .addService(new FileIngestionServiceImpl(targetDir))
-            .build()
-            .start();
-
-        log.info("gRPC server listening on port {}, saving to file {}", Shared.GRPC_PORT, targetDir.toAbsolutePath());
+        Server server = start(Shared.GRPC_PORT, Paths.get(Shared.SOURCE_DIR));
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             log.info("Shutting down gRPC server");
@@ -30,5 +22,22 @@ public class FileIngestionServer {
         }));
 
         server.awaitTermination();
+    }
+
+    /**
+     * Creates the target folder if needed and starts the server.
+     * Pass port 0 to let the operating system pick any free port.
+     */
+    static Server start(int port, Path targetDir) throws IOException {
+        Files.createDirectories(targetDir);
+
+        Server server = ServerBuilder.forPort(port)
+                .addService(new FileIngestionServiceImpl(targetDir))
+                .build()
+                .start();
+
+        log.info("gRPC server listening on port {}, saving files to {}",
+                server.getPort(), targetDir.toAbsolutePath());
+        return server;
     }
 }

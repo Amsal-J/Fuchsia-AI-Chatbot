@@ -18,4 +18,5 @@ buildNumber.properties
 temporal.db
 folder1/
 folder2/
+outbox/
 .DS_Store
