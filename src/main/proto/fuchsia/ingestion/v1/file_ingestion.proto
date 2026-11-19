@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package fuchsia.ingestion.v1;
+
+option java_multiple_files = true;
+option java_outer_classname = "FileIngestionProto";
+option java_package = "fuchsia.grpc";
+
+// The service: what the server offers and the client can call.
+service FileIngestionService {
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse);
+}
+
+// What the client sends.
+message UploadFileRequest {
+  string filename = 1;
+  bytes content = 2;
+}
+
+// What the server sends back.
+message UploadFileResponse {
+  bool accepted = 1;
+  string message = 2;
+}
