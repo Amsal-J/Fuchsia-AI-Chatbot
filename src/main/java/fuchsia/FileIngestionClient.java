@@ -15,6 +15,17 @@ import java.util.concurrent.TimeUnit;
 
 public class FileIngestionClient {
 
+    /** gRPC's 4 MB message limit, minus room for the filename and protobuf overhead. */
+    static final long MAX_FILE_BYTES = 4L * 1024 * 1024 - 1024;
+
+    /** The outcome of one upload. */
+    record UploadResult(String filename, boolean success, String detail) {
+        @Override
+        public String toString() {
+            return (success ? "OK   " : "FAIL ") + filename + ": " + detail;
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException {
         if (args.length == 0) {
             System.err.println("Usage: FileIngestionClient <file> [more files...]");
@@ -31,18 +42,23 @@ public class FileIngestionClient {
                     FileIngestionServiceGrpc.newBlockingStub(channel);
 
             for (String arg : args) {
-                upload(stub, Paths.get(arg));
+                System.out.println(upload(stub, Paths.get(arg)));
             }
         } finally {
             channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
         }
     }
 
-    private static void upload(FileIngestionServiceGrpc.FileIngestionServiceBlockingStub stub, Path file) {
+    static UploadResult upload(FileIngestionServiceGrpc.FileIngestionServiceBlockingStub stub, Path file) {
         String filename = file.getFileName().toString();
         try {
-            byte[] bytes = Files.readAllBytes(file);
+            long size = Files.size(file);
+            if (size > MAX_FILE_BYTES) {
+                return new UploadResult(filename, false,
+                        "file too large (" + size + " bytes, max " + MAX_FILE_BYTES + ")");
+            }
 
+            byte[] bytes = Files.readAllBytes(file);
             UploadFileRequest request = UploadFileRequest.newBuilder()
                     .setFilename(filename)
                     .setContent(ByteString.copyFrom(bytes))
@@ -52,13 +68,13 @@ public class FileIngestionClient {
                     .withDeadlineAfter(10, TimeUnit.SECONDS)
                     .uploadFile(request);
 
-            System.out.println("OK   " + filename + ": " + response.getMessage());
+            return new UploadResult(filename, true, response.getMessage());
 
         } catch (IOException e) {
-            System.out.println("FAIL " + filename + ": could not read file (" + e.getMessage() + ")");
+            return new UploadResult(filename, false, "could not read file (" + e.getMessage() + ")");
         } catch (StatusRuntimeException e) {
-            System.out.println("FAIL " + filename + ": " + e.getStatus().getCode()
-                    + " - " + e.getStatus().getDescription());
+            return new UploadResult(filename, false,
+                    e.getStatus().getCode() + " - " + e.getStatus().getDescription());
         }
     }
 }
