@@ -12,6 +12,9 @@ public final class Shared {
     public static final String TEMPORAL_ADDRESS = System.getenv().getOrDefault("TEMPORAL_ADDRESS", "localhost:7233");
     public static final int GRPC_PORT = Integer.parseInt(System.getenv().getOrDefault("GRPC_PORT", "50051"));
     public static final String GRPC_HOST = System.getenv().getOrDefault("GRPC_HOST", "localhost");
+    public static final int WEB_PORT = Integer.parseInt(System.getenv().getOrDefault("WEB_PORT", "8080"));
+    // "localhost" when run directly; Docker sets 0.0.0.0 so the port mapping can reach it.
+    public static final String WEB_BIND = System.getenv().getOrDefault("WEB_BIND", "localhost");
 
     public static WorkflowServiceStubs connect() {
         return WorkflowServiceStubs.newServiceStubs(

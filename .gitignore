@@ -20,3 +20,4 @@ folder1/
 folder2/
 outbox/
 .DS_Store
+node_modules/

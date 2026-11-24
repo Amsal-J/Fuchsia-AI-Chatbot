@@ -6,14 +6,18 @@ Containerized using Docker and through VSCode's Dev Container Extension.
 ## Architecture
 
 ```
-client ──gRPC :50051──▶ gRPC server ──▶ folder1 ──Temporal sync──▶ folder2
+browser ──HTTP :8080──▶ web server ──gRPC :50051──▶ gRPC server ──▶ folder1 ──Temporal sync──▶ folder2
+                         test client ──gRPC :50051──┘
 ```
 
+- **Web UI** (`fuchsia.WebServer`): serves the client upload page at http://localhost:8080 and forwards each uploaded file to the gRPC server with the same `UploadFile` call the test client uses. Browsers can't speak to the gRPC server directly, so this server translates between the two. The page files live in `src/main/resources/static/`.
 - **gRPC server** (`fuchsia.FileIngestionServer`): accepts file uploads and writes them to `folder1`. Rejects invalid filenames (path separators, leading `.`), empty files, duplicates, and files over ~4 MB.
 - **Temporal worker** (`fuchsia.IngestionWorker`): polls `folder1` every 60s and copies new files to `folder2`.
 - **Test client** (`fuchsia.FileIngestionClient`): uploads files to the gRPC server. Will be replaced by the email inbox in a later phase.
 
 The gRPC server and the Temporal sync are independent: they only share `folder1`. Either can run without the other.
+
+The upload page's script is written in TypeScript: edit `src/main/frontend/app.ts`. `mvn compile` turns it into `app.js` automatically (the first build downloads Node into `target/node`, so it takes a bit longer).
 
 ## Quick start **WITH** Docker Locally
 
@@ -27,6 +31,7 @@ docker compose up --build
 
 - Drop files into `folder1/`. They're copied to `folder2/` on the next poll (every 60s).
 - Temporal Web UI: http://localhost:8233
+- Web UI: http://localhost:8080 (starts automatically with `docker compose up`)
 - gRPC server: `localhost:50051` (starts automatically with `docker compose up`)
 - Stop everything: `Ctrl+C`, then `docker compose down`
 
@@ -65,12 +70,21 @@ To stop the execution of program being run locally:
 3. Then you may close down the Temporal Server by pressing `Ctrl+C` on that terminal window.
 4. If running, `Ctrl+C` the gRPC server tab.
 
-### Sending files through gRPC (locally)
+### Sending files through the web UI (locally)
 
 Uses two more terminal windows:
 
 1. `mvn compile exec:java -Dexec.mainClass="fuchsia.FileIngestionServer"` to start the gRPC server on port 50051, will continue indefinitely
-2. `mvn -q compile exec:java -Dexec.mainClass="fuchsia.FileIngestionClient" -Dexec.args="/path/to/file.txt"` to upload a file, will stop once the upload is done
+2. `mvn compile exec:java -Dexec.mainClass="fuchsia.WebServer"` to start the web UI, will continue indefinitely
+3. Open http://localhost:8080 and click **Deposit File**. In Chrome or Edge the file explorer opens in Downloads.
+
+The web UI needs the gRPC server running; without it, uploads show "the upload service is not running right now." in red.
+
+### Sending files through gRPC (locally)
+
+With the gRPC server running, in another terminal:
+
+1. `mvn -q compile exec:java -Dexec.mainClass="fuchsia.FileIngestionClient" -Dexec.args="/path/to/file.txt"` to upload a file, will stop once the upload is done
 
 Pass several files in `-Dexec.args` separated by spaces to upload them all at once. The gRPC server works on its own: files land in `folder1/` even if the Temporal worker isn't running, and get synced once it is.
 
@@ -90,14 +104,21 @@ mvn compile exec:java -Dexec.mainClass="fuchsia.IngestionWorker"
 mvn compile exec:java -Dexec.mainClass="fuchsia.IngestionStarter"
 ```
 
-To run the gRPC server and send a file from the dev container:
+To run the gRPC server and the web UI from the dev container (separate terminals):
 
 ```bash
 mvn compile exec:java -Dexec.mainClass="fuchsia.FileIngestionServer"
+mvn compile exec:java -Dexec.mainClass="fuchsia.WebServer"
+```
+
+Then open http://localhost:8080 on your machine. To send a file with the test client instead:
+
+```bash
 mvn -q compile exec:java -Dexec.mainClass="fuchsia.FileIngestionClient" -Dexec.args="/path/to/file.txt"
 ```
 
 - Temporal UI: http://localhost:8233
+- Web UI: port 8080 is forwarded, so http://localhost:8080 works in your normal browser
 - gRPC server: port 50051 is forwarded, so clients on your machine can also reach it at `localhost:50051`
 - Don't run this and `docker compose up` at the same time (both use ports 7233/8233)
 - The gRPC server also can't run in both at once (both use port 50051)
@@ -110,7 +131,7 @@ To exit: click the `><` button in the bottom-left → **Reopen Folder Locally**.
 
 Run `mvn test` from the dev container terminal, or locally if you have Java 21 and Maven installed. Tests also run automatically on every pull request via GitHub Actions.
 
-The suite (68 tests) covers:
+The suite (82 tests) covers:
 - **Temporal activities**: scanning `folder1`, copying to `folder2`, skipping hidden files and duplicates
 - **Temporal workflow**: polling interval, retries, failure recovery, continue-as-new (uses Temporal's time-skipping test server)
 - **Filename validation**: allowed names, boundaries, path traversal attempts
@@ -118,3 +139,4 @@ The suite (68 tests) covers:
 - **gRPC server**: start/stop, port handling, the 4 MB message limit
 - **gRPC client**: success and failure results, client-side size check
 - **Handoff**: files uploaded via gRPC are found and copied by the Temporal sync
+- **Web server**: serving the page, forwarding uploads to gRPC, and turning gRPC errors (duplicate, invalid name, empty, too large, server down) into HTTP errors the page shows in red

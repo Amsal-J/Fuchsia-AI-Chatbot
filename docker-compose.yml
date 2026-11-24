@@ -44,6 +44,19 @@ services:
       - ./folder1:/app/folder1
     restart: unless-stopped
 
+  web:
+    build: .
+    image: fuchsia-ai-chatbot:latest
+    command: ["fuchsia.WebServer"]
+    environment:
+      GRPC_HOST: grpc-server
+      WEB_BIND: 0.0.0.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - grpc-server
+    restart: unless-stopped
+
   client:
     build: .
     image: fuchsia-ai-chatbot:latest
