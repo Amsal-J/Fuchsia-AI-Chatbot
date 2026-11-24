@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "rootDir": ".",
+    "outDir": "../../../target/classes/static",
+    "inlineSourceMap": true,
+    "inlineSources": true
+  },
+  "include": ["app.ts"]
+}

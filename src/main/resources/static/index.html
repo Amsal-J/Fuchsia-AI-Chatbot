@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FuchsiaAI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Header banner: cream and pink theme -->
+  <header class="site-header">
+    <p class="brand">FuchsiaAI</p>
+
+    <nav class="tabs" aria-label="Sections">
+      <!-- Tab 1: this page (file upload) -->
+      <a class="tab tab-active" href="index.html" aria-current="page">File Upload</a>
+
+      <!-- Tab 2: file review. Disabled on purpose, part of a future phase.
+           Plain text with no link and no click handler, so it does nothing. -->
+      <span class="tab tab-disabled" aria-disabled="true" title="Coming in a future phase">File Review</span>
+    </nav>
+  </header>
+
+  <!-- Main page section: white and light blue theme -->
+  <main class="upload-section">
+    <button type="button" id="deposit-button" class="deposit-button">Deposit File</button>
+
+    <!-- Fallback picker for browsers without showOpenFilePicker (Firefox, Safari).
+         Hidden; the deposit button opens it. -->
+    <input type="file" id="file-input" multiple hidden>
+
+    <!-- Status messages: green = file selected / uploaded, red = upload failed -->
+    <ul id="status" class="status" aria-live="polite"></ul>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

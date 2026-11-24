@@ -4,7 +4,7 @@
     "dockerComposeFile": "docker-compose.yml",
     "service": "dev",
     "workspaceFolder": "/workspaces/fuchsia-ai-chatbot",
-    "forwardPorts": [50051],
+    "forwardPorts": [50051, 8080],
     "shutdownAction": "stopCompose",
 
     "features": {

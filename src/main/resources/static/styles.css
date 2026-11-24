@@ -1,0 +1,139 @@
+/* ---------- Colours ---------- */
+:root {
+  --fuchsia-pink: #c33067;   /* Fuchsia Shoes brand pink (theme colour on fuchsiashoes.com) */
+  --cream: #f6eedf;          /* header background */
+  --white: #ffffff;          /* main section background */
+  --light-blue: #add8e6;     /* deposit button */
+  --light-blue-hover: #9ccbdb;
+  --light-blue-border: #7fb6c9;
+  --text: #000000;           /* all body text */
+  --ok-green: #1b7a2e;       /* selection / upload confirmation */
+  --error-red: #c62828;      /* upload failure */
+  --disabled-grey: #8a8a8a;  /* inactive File Review tab */
+}
+
+/* ---------- Base ---------- */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: var(--white);
+}
+
+/* ---------- Header banner (cream and pink) ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.5rem;
+  background: var(--cream);
+  border-bottom: 4px solid var(--fuchsia-pink);
+}
+
+.brand {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--fuchsia-pink);
+}
+
+.tabs {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.tab {
+  font-size: 1rem;
+  color: var(--text);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-active {
+  border-bottom-color: var(--fuchsia-pink);
+}
+
+.tab-active:hover {
+  color: var(--fuchsia-pink);
+}
+
+.tab-disabled {
+  color: var(--disabled-grey);
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* ---------- Main section (white and light blue) ---------- */
+.upload-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;       /* no side padding, so 33.333% below is 1/3 of the full page width */
+  background: var(--white);
+}
+
+.deposit-button {
+  width: 33.333%;        /* about 1/3 of the page width */
+  min-width: 14rem;      /* keeps it usable on narrow screens */
+  aspect-ratio: 3 / 1;   /* height:width = 1:3 */
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text);
+  background: var(--light-blue);
+  border: 2px solid var(--light-blue-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.deposit-button:hover {
+  background: var(--light-blue-hover);
+}
+
+.deposit-button:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 3px;
+}
+
+.deposit-button:disabled {
+  cursor: wait;
+}
+
+/* ---------- Status messages ---------- */
+.status {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  width: 33.333%;
+  min-width: 14rem;
+  text-align: center;
+}
+
+.status li {
+  margin: 0.35rem 0;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.status-ok {
+  color: var(--ok-green);
+}
+
+.status-error {
+  color: var(--error-red);
+}
