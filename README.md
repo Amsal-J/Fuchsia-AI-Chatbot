@@ -125,7 +125,24 @@ mvn -q compile exec:java -Dexec.mainClass="fuchsia.FileIngestionClient" -Dexec.a
 
 Run the worker and starter in separate terminals (use the split-terminal button in VS Code's terminal panel).
 
+To terminate the workflow use:
+```bash
+temporal workflow terminate --workflow-id fuchsia-ingestion --reason "testing complete"
+```
+
 To exit: click the `><` button in the bottom-left → **Reopen Folder Locally**. This also stops the containers.
+
+### Switching between the dev container and your own machine
+
+The dev container runs Linux, so it needs its own copies of Node and TypeScript (the ones installed on macOS/Windows won't run there, and vice versa). Whenever you switch between the dev container and building on your own machine, run this first:
+
+```bash
+rm -rf target/node src/main/frontend/node_modules && mvn test
+```
+
+This removes only the OS-specific files. The next build downloads the right versions automatically.
+
+**Don't use `mvn clean` (`mvn clean compile`, `mvn clean test`) while VS Code has the project open.** VS Code's Java extension rebuilds `target/` at the same time Maven does, which can make `mvn clean` fail or make tests fail at random (e.g. `WebServerTest` returning 404 for the page). Plain `mvn compile` / `mvn test` is enough. If you really need a clean build, quit VS Code first and run it from a regular terminal.
 
 ## Tests
 
