@@ -19,6 +19,8 @@ The gRPC server and the Temporal sync are independent: they only share `folder1`
 
 The upload page's script is written in TypeScript: edit `src/main/frontend/app.ts`. `mvn compile` turns it into `app.js` automatically (the first build downloads Node into `target/node`, so it takes a bit longer).
 
+The .env file requires creation and population with the info you choose to use for the database. Currently formed locally, use .env.example as a template for the .env file. Populate the password using `openssl rand -base64 24`.
+
 ## Quick start **WITH** Docker Locally
 
 Requires only [Docker Desktop](https://www.docker.com/products/docker-desktop/).
@@ -88,6 +90,8 @@ With the gRPC server running, in another terminal:
 
 Pass several files in `-Dexec.args` separated by spaces to upload them all at once. The gRPC server works on its own: files land in `folder1/` even if the Temporal worker isn't running, and get synced once it is.
 
+During local development, `docker compose up -d postgres` can be used to start just the database and to connect to the database you can use `docker compose exec postgres psql -U <your user> -d <your db> -c "SELECT version();"` where the "your user" and "your db" can be filled in using the credentials from your .env file.
+
 ## Develop in a container (VS Code)
 
 Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/), [VS Code](https://code.visualstudio.com/), and the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
@@ -96,7 +100,7 @@ Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/), [VS 
 2. Click **Reopen in Container** when prompted (or Cmd/Ctrl+Shift+P → **Dev Containers: Reopen in Container**)
 3. Wait for the first build (a few minutes; later opens take seconds)
 
-The container includes JDK 21, Maven, the Temporal CLI, and the Java extensions, with a Temporal server running alongside it. From the VS Code terminal:
+The container includes JDK 21, Maven, the Temporal CLI, a postgreSQL command-line client and the Java extensions, with a Temporal server running alongside it. From the VS Code terminal:
 
 ```bash
 mvn test
@@ -116,6 +120,12 @@ Then open http://localhost:8080 on your machine. To send a file with the test cl
 ```bash
 mvn -q compile exec:java -Dexec.mainClass="fuchsia.FileIngestionClient" -Dexec.args="/path/to/file.txt"
 ```
+
+Within the dev container, the postgres database will start automatically and can be accessed using the following terminal command line
+```bash
+psql -h postgres -U <your user> -d <your db>
+```
+where "your user" and "your db" is going to be filled in with your .env variables. In the dev container you will enter this line and be prompted to enter your password. Once in you can run postgreSQL commands downloaded during the construction of the dev container. "\q" can be used to exit the psql command line client.
 
 - Temporal UI: http://localhost:8233
 - Web UI: port 8080 is forwarded, so http://localhost:8080 works in your normal browser
