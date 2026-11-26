@@ -21,3 +21,4 @@ folder2/
 outbox/
 .DS_Store
 node_modules/
+.env

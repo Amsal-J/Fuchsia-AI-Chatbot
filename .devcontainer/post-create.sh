@@ -6,6 +6,10 @@ curl -sSf https://temporal.download/cli.sh | sh
 sudo ln -sf "$HOME/.temporalio/bin/temporal" /usr/local/bin/temporal
 temporal --version
 
+echo "==> Installing Postgres command-line client"
+sudo apt-get update && sudo apt-get install -y postgresql-client
+psql --version
+
 echo "==> Downloading Maven dependencies"
 mvn -B dependency:go-offline
 
